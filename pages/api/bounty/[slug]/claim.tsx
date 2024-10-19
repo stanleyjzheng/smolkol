@@ -1,9 +1,8 @@
-// pages/api/bounty/[slug]/claim.ts
-
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Pool } from 'pg'
 import { getToken } from 'next-auth/jwt'
 import { extractTweetId, fetchTweetData } from '../../../../lib/utils'
+import { judgeBounty } from '../../../../lib/openai'
 
 const pool = new Pool({
 	user: process.env.PG_USER,
@@ -91,6 +90,13 @@ export default async function handler(
 		if (!meetsCondition) {
 			const reason = `Your tweet does not meet the bounty requirements. It has ${likes} likes but requires at least ${requiredLikes} likes.`
 			res.status(200).json({ success: false, reason })
+			return
+		}
+
+		let judged = await judgeBounty(bounty.search_string, tweetText)
+
+		if (!judged?.matched_request) {
+			res.status(200).json({ success: false, reason: judged?.reason })
 			return
 		}
 

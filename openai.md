@@ -35,19 +35,21 @@ Examples:
 > Bounty requirement: A positive tweet about Uniswap.
 > Tweet: "Think CZ is wrong; no Uniswap exploit. All Uniswap NFT's from a single address which approved exploiter. Plus, transaction trace checks out too. `_isApprovedOrOwner` is legit."
 
-Since this is denying an exploit occured, it's a positive tweet. Pay out the bounty.
+Since this is denying an exploit occured, it's a positive tweet. It is matched.
 
 > Bounty requirement: A positive tweet about Uniswap.
 > Tweet: "Uniswap is a scam. It's a front for the government to track your transactions."
 
-This is not a positive tweet. Do not pay out the bounty.
+This is not a positive tweet. It does not match.
 
 > Bounty requirement: A positive tweet about Uniswap.
 > Tweet: "Cryptokitties is my favourite NFT project."
 
-This is not a tweet about Uniswap at all. Do not pay out the bounty.
+This is not a tweet about Uniswap at all. It does not match.
 
 > Bounty requirement: A shitpost about Uniswap.
 > Tweet: "New Uniswap"
 
-This isn't super clear, but there may be an image attached, so it's likely a shitpost. Pay out the bounty.
+This isn't super clear, but there may be an image attached, so it's likely a shitpost. It is matched.
+
+Reason is the reason for a mismatch, if matched_request is false, else null

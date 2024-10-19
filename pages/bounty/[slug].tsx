@@ -1,5 +1,3 @@
-// pages/bounty/[slug].tsx
-
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
