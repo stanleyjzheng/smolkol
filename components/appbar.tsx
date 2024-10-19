@@ -1,42 +1,33 @@
 import { DynamicWidget } from '@dynamic-labs/sdk-react-core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
-const links = [
-	{ label: 'Create Link', href: '/create' },
-	{ label: 'Redeem Link', href: '/redeem' },
-]
+import { PlusCircle } from 'lucide-react'
 
 const Appbar = () => {
 	const router = useRouter()
 
 	return (
-		<div className='fixed top-0 left-0 z-20 w-full bg-zinc-900 pt-safe'>
-			<header className='border-b bg-zinc-100 px-safe dark:border-zinc-800 dark:bg-zinc-900'>
-				<div className='mx-auto flex h-20 max-w-screen-md items-center justify-between px-6'>
+		<div className='sticky top-0 z-10 bg-background border-b shadow-md'>
+			<header className='bg-background border-b'>
+				<div className='container max-w-screen-xl mx-auto px-4 py-4 flex justify-between items-center'>
+					{/* Left side: Logo */}
 					<Link href='/'>
-						<h1 className='font-medium'>Link To Lambo</h1>
+						<h1 className='text-2xl font-bold'>SmolKOL</h1>
 					</Link>
-					<nav className='flex items-center space-x-6'>
-						<div className='hidden sm:block'>
-							<div className='flex items-center space-x-6'>
-								{links.map(({ label, href }) => (
-									<Link
-										key={label}
-										href={href}
-										className={`text-sm ${
-											router.pathname === href
-												? 'text-custom-primary '
-												: 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50'
-										}`}
-									>
-										{label}
-									</Link>
-								))}
-							</div>
-						</div>
-					</nav>
-					<DynamicWidget variant='modal' />
+
+					{/* Right side: Buttons (Create Bounty + DynamicWidget) */}
+					<div className='flex items-center space-x-4'>
+						{/* Create Bounty Button */}
+						<Link href='/create'>
+							<button className='flex items-center px-4 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow'>
+								<PlusCircle className='mr-2 h-4 w-4' />
+								Create Bounty
+							</button>
+						</Link>
+
+						{/* DynamicWidget Button */}
+						<DynamicWidget variant='modal' />
+					</div>
 				</div>
 			</header>
 		</div>

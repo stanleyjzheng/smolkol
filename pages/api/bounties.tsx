@@ -1,6 +1,7 @@
 // pages/api/bounties.ts
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Pool } from 'pg'
+import { Bounty } from '@/lib/types'
 
 // Initialize connection to PostgreSQL
 const pool = new Pool({
@@ -10,21 +11,6 @@ const pool = new Pool({
 	password: process.env.PG_PASSWORD,
 	port: Number(process.env.PG_PORT),
 })
-
-// Define the type for the bounty
-type Bounty = {
-	creator_address: string
-	creator_ens: string | null
-	amount: string // Using string to handle large ETH amounts with 18 decimals
-	chainid: number
-	completed: boolean
-	search_string: string
-	condition: {
-		type: string
-		count: number
-	}
-	slug: string
-}
 
 export default async function handler(
 	req: NextApiRequest,

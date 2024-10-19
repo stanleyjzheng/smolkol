@@ -97,25 +97,8 @@ export default function BountyPage() {
 
 	return (
 		<div className='min-h-screen bg-background'>
-			{/* Sticky Navbar */}
-			<header className='sticky top-0 z-10 bg-background border-b shadow-md'>
-				<div className='container mx-auto px-4 py-4 flex justify-between items-center'>
-					{/* Left side (Branding or Title) */}
-					<div className='flex items-center space-x-4'>
-						<h1 className='text-2xl font-bold'>Bounty Board</h1>
-					</div>
-
-					{/* Right side (Action buttons or links) */}
-					<div className='flex items-center space-x-4'>
-						<Button>
-							<PlusCircle className='mr-2 h-4 w-4' /> Create New Bounty
-						</Button>
-					</div>
-				</div>
-			</header>
-
 			{/* Main Content */}
-			<main className='container mx-auto px-4 py-8'>
+			<main className='container max-w-screen-xl mx-auto px-4 py-4'>
 				{/* Fillable Bounties (Open) */}
 				<h2 className='text-xl font-semibold mb-4'>Open Bounties</h2>
 				{renderBounties(fillableBounties, false)}
