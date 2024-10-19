@@ -2,6 +2,8 @@
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Pool } from 'pg'
+import { getToken } from 'next-auth/jwt'
+import { extractTweetId, fetchTweetData } from '../../../../lib/utils'
 
 const pool = new Pool({
 	user: process.env.PG_USER,
@@ -23,6 +25,13 @@ export default async function handler(
 
 	if (req.method !== 'POST') {
 		res.status(405).json({ error: 'Method not allowed' })
+		return
+	}
+
+	const token = await getToken({ req })
+
+	if (!token) {
+		res.status(401).json({ error: 'Not authenticated' })
 		return
 	}
 
@@ -58,15 +67,29 @@ export default async function handler(
 			return
 		}
 
-		// Simulate high-latency OpenAI call
+		// Extract tweet ID and fetch tweet data
+		const tweetId = extractTweetId(tweetLink)
+
+		if (!tweetId) {
+			res.status(400).json({ error: 'Invalid tweet link' })
+			return
+		}
+
+		const tweetData = await fetchTweetData(req, tweetId)
+
+		// Check if the tweet meets the bounty conditions
+		const tweetText = tweetData.text
+		const likes = tweetData.likeCount
+
+		// Simulate OpenAI call to analyze tweet content
 		await sleep(2000)
 
-		// Dummy OpenAI result
-		const openAIResult = Math.random() < 0.5
+		// Dummy sentiment analysis (positive if likes > threshold)
+		const requiredLikes = bounty.condition.count
+		const meetsCondition = likes >= requiredLikes
 
-		if (!openAIResult) {
-			const reason =
-				'Your tweet does not meet the bounty requirements because it lacks positive sentiment about Uniswap.'
+		if (!meetsCondition) {
+			const reason = `Your tweet does not meet the bounty requirements. It has ${likes} likes but requires at least ${requiredLikes} likes.`
 			res.status(200).json({ success: false, reason })
 			return
 		}
@@ -74,7 +97,16 @@ export default async function handler(
 		// Simulate ETH transaction
 		await sleep(2000)
 
-		const txLink = 'https://etherscan.io/tx/0x1234567890abcdef'
+		// const txLink = 'https://etherscan.io/tx/0x1234567890abcdef'
+		const txLink = tweetText
+
+		// Mark the bounty as completed
+		const updateClient = await pool.connect()
+		await updateClient.query(
+			'UPDATE bounties SET completed = TRUE WHERE slug = $1',
+			[slug],
+		)
+		updateClient.release()
 
 		res.status(200).json({ success: true, txLink })
 	} catch (error) {

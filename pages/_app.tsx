@@ -6,6 +6,7 @@ import { WagmiProvider } from 'wagmi'
 import { DynamicContextProvider } from '@dynamic-labs/sdk-react-core'
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum'
 import '@/styles/globals.css'
+import { SessionProvider } from 'next-auth/react'
 
 import { getConfig } from '@/lib/wagmi'
 
@@ -34,24 +35,26 @@ export default function App({ Component, pageProps }: AppProps) {
 	const [queryClient] = useState(() => new QueryClient())
 
 	return (
-		<WagmiProvider config={config} initialState={pageProps.initialState}>
-			<QueryClientProvider client={queryClient}>
-				<DynamicContextProvider
-					settings={{
-						environmentId: 'f8b26bda-3d5a-4c6c-86e3-ce0fc5008e8c',
-						walletConnectors: [EthereumWalletConnectors],
-						overrides: { evmNetworks },
-					}}
-				>
-					<ThemeProvider
-						attribute='class'
-						defaultTheme='system'
-						disableTransitionOnChange
+		<SessionProvider session={pageProps.session}>
+			<WagmiProvider config={config} initialState={pageProps.initialState}>
+				<QueryClientProvider client={queryClient}>
+					<DynamicContextProvider
+						settings={{
+							environmentId: 'f8b26bda-3d5a-4c6c-86e3-ce0fc5008e8c',
+							walletConnectors: [EthereumWalletConnectors],
+							overrides: { evmNetworks },
+						}}
 					>
-						<Component {...pageProps} />
-					</ThemeProvider>
-				</DynamicContextProvider>
-			</QueryClientProvider>
-		</WagmiProvider>
+						<ThemeProvider
+							attribute='class'
+							defaultTheme='system'
+							disableTransitionOnChange
+						>
+							<Component {...pageProps} />
+						</ThemeProvider>
+					</DynamicContextProvider>
+				</QueryClientProvider>
+			</WagmiProvider>
+		</SessionProvider>
 	)
 }

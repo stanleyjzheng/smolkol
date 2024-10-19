@@ -1,17 +1,30 @@
+// pages/bounty/[slug].tsx
+
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Bounty } from '@/lib/types'
+import { signIn, signOut, useSession } from 'next-auth/react'
+
+interface Bounty {
+	creator_address: string
+	creator_ens: string | null
+	amount: string
+	chainid: number
+	completed: boolean
+	search_string: string | null
+	condition: any
+	slug: string
+}
 
 export default function BountyPage() {
 	const router = useRouter()
 	const { slug } = router.query
+	const { data: session, status } = useSession()
 
 	const [bounty, setBounty] = useState<Bounty | null>(null)
 	const [loading, setLoading] = useState(true)
 	const [tweetLink, setTweetLink] = useState('')
 	const [submitting, setSubmitting] = useState(false)
 	const [submissionResult, setSubmissionResult] = useState<string | null>(null)
-	const [loggedIn, setLoggedIn] = useState(false)
 
 	useEffect(() => {
 		if (slug) {
@@ -27,7 +40,7 @@ export default function BountyPage() {
 	}, [slug])
 
 	const handleClaim = async () => {
-		if (!loggedIn) {
+		if (!session) {
 			alert('Please log in with Twitter to claim this bounty.')
 			return
 		}
@@ -50,11 +63,6 @@ export default function BountyPage() {
 		}
 
 		setSubmitting(false)
-	}
-
-	const handleLogin = () => {
-		// Simulate Twitter login
-		setLoggedIn(true)
 	}
 
 	if (loading) {
@@ -99,15 +107,25 @@ export default function BountyPage() {
 				</p>
 			</div>
 
-			{!loggedIn ? (
+			{status === 'unauthenticated' ? (
 				<button
-					onClick={handleLogin}
+					onClick={() => signIn('twitter')}
 					className='px-4 py-2 bg-blue-500 text-white rounded-md mb-4'
 				>
 					Log in with Twitter
 				</button>
 			) : (
 				<>
+					<div className='mb-4'>
+						<p className='mb-2'>Logged in as {session.user?.name}</p>
+						<button
+							onClick={() => signOut()}
+							className='px-4 py-2 bg-gray-500 text-white rounded-md mb-4'
+						>
+							Log out
+						</button>
+					</div>
+
 					<div className='mb-4'>
 						<label
 							htmlFor='tweetLink'
