@@ -7,7 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import { PlusCircle } from 'lucide-react'
+import Link from 'next/link'
 
 // Type for the Bounty object
 type Bounty = {
@@ -88,7 +88,9 @@ export default function BountyPage() {
 						</p>
 					</CardContent>
 					<CardFooter className='flex justify-between items-center'>
-						<Button variant='outline'>View Details</Button>
+						<Link href={`/bounty/${bounty.slug}`} passHref>
+							<Button variant='outline'>Claim</Button>
+						</Link>{' '}
 					</CardFooter>
 				</Card>
 			))}
