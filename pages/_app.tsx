@@ -12,7 +12,7 @@ import { Toaster } from 'sonner'
 import { getConfig } from '@/lib/wagmi'
 
 // Setting up list of evmNetworks
-const evmNetworks = [
+export const evmNetworks: any[] = [
 	{
 		blockExplorerUrls: ['https://sepolia.basescan.org/'],
 		chainId: 84532,

@@ -120,3 +120,31 @@ export const formatCondition = (condition: { type: string; count: number }) => {
 			return JSON.stringify(condition)
 	}
 }
+
+export const getChainNameById = (
+	chainId: number,
+	networks: any[],
+): string | null => {
+	if (!Array.isArray(networks)) {
+		console.error('Networks is not an array or is undefined')
+		return null
+	}
+
+	const network = networks.find((network: any) => network.chainId === chainId)
+	return network ? network.chainName : null
+}
+
+export const getBlockExplorerUrlById = (
+	chainId: number,
+	networks: any[],
+): string | null => {
+	if (!Array.isArray(networks)) {
+		console.error('Networks is not an array or is undefined')
+		return null
+	}
+
+	const network = networks.find((network: any) => network.chainId === chainId)
+	return network && network.blockExplorerUrls
+		? network.blockExplorerUrls[0]
+		: null
+}

@@ -10,7 +10,8 @@ import { Label } from '@/components/ui/label'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Alert } from '@/components/ui/alert'
 import Page from '@/components/page'
-
+import { evmNetworks } from '../../pages/_app'
+import { getChainNameById } from '../../lib/utils'
 import { formatCondition } from '../../lib/utils'
 import { toast } from 'sonner'
 
@@ -131,8 +132,10 @@ export default function BountyPage() {
 								<TableCell>{parseFloat(bounty.amount) / 10 ** 18}</TableCell>
 							</TableRow>
 							<TableRow>
-								<TableCell>Chain ID:</TableCell>
-								<TableCell>{bounty.chainid}</TableCell>
+								<TableCell>Chain:</TableCell>
+								<TableCell>
+									{getChainNameById(bounty.chainid, evmNetworks)}
+								</TableCell>
 							</TableRow>
 							<TableRow>
 								<TableCell>Completed:</TableCell>

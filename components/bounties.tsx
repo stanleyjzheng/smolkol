@@ -9,6 +9,8 @@ import {
 } from '@/components/ui/card'
 import Link from 'next/link'
 import { formatCondition } from '../lib/utils'
+import { evmNetworks } from '../pages/_app'
+import { getChainNameById } from '../lib/utils'
 
 // Type for the Bounty object
 type Bounty = {
@@ -93,7 +95,9 @@ export default function BountyPage() {
 							Amount: {parseFloat(bounty.amount) / 10 ** 18} ETH (~$
 							{convertEthToUsd(bounty.amount)} USD)
 						</p>
-						<p className='text-muted-foreground'>Chain ID: {bounty.chainid}</p>
+						<p className='text-muted-foreground'>
+							Chain: {getChainNameById(bounty.chainid, evmNetworks)}
+						</p>
 						<p className='text-muted-foreground'>
 							{isCompleted ? 'Status: Unfillable (Completed)' : 'Status: Open'}
 						</p>
