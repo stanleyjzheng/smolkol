@@ -55,6 +55,24 @@ export async function judgeBounty(condition: string, tweet: string) {
 			],
 			response_format: zodResponseFormat(BountyJudgeSchema, 'bounty_judge'),
 		})
+		const publisher = 'https://walrus-testnet-publisher.nodes.guru'
+		const response = await fetch(`${publisher}/v1/store`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				completion,
+			}),
+		})
+		const data = await response.json()
+		const blobId = data.newlyCreated.blobObject.blobId
+		const storedBlobs = localStorage.getItem('storedBlobs')
+		if (!storedBlobs) {
+			localStorage.setItem('storedBlobs', blobId)
+		} else {
+			localStorage.setItem('storedBlobs', storedBlobs + '|' + blobId)
+		}
 
 		const bounty_judge = completion.choices[0].message
 
