@@ -106,9 +106,11 @@ export default function BountyPage() {
 						</p>
 					</CardContent>
 					<CardFooter className='flex justify-between items-center'>
-						<Link href={`/bounty/${bounty.slug}`} passHref>
-							<Button variant='outline'>Claim</Button>
-						</Link>
+						{!isCompleted && (
+							<Link href={`/bounty/${bounty.slug}`} passHref>
+								<Button variant='outline'>Claim</Button>
+							</Link>
+						)}
 					</CardFooter>
 				</Card>
 			))}

@@ -67,12 +67,7 @@ export async function judgeBounty(condition: string, tweet: string) {
 		})
 		const data = await response.json()
 		const blobId = data.newlyCreated.blobObject.blobId
-		const storedBlobs = localStorage.getItem('storedBlobs')
-		if (!storedBlobs) {
-			localStorage.setItem('storedBlobs', blobId)
-		} else {
-			localStorage.setItem('storedBlobs', storedBlobs + '|' + blobId)
-		}
+		console.log('Blob ID:', blobId)
 
 		const bounty_judge = completion.choices[0].message
 
