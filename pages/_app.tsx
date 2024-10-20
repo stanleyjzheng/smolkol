@@ -11,7 +11,7 @@ import { SessionProvider } from 'next-auth/react'
 import { getConfig } from '@/lib/wagmi'
 
 // Setting up list of evmNetworks
-const evmNetworks = [
+export const evmNetworks: any[] = [
 	{
 		blockExplorerUrls: ['https://sepolia.basescan.org/'],
 		chainId: 84532,
