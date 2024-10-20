@@ -47,12 +47,22 @@ export default function CreateBounty() {
 
 	const { primaryWallet, network } = useDynamicContext()
 
-	let chain_id = primaryWallet?.getNetwork()
+	let chain_id: any
+
+	// a terrible race condition but i suck at js
+	primaryWallet
+		?.getNetwork()
+		.then((result) => {
+			chain_id = result
+			console.log('Chain ID:', chain_id)
+		})
+		.catch((error) => {
+			console.error('Error:', error)
+		})
 	let creator_address = primaryWallet?.address
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		// Here you would call your handleCreateBounty function
 		console.log('Submitting bounty:', formData)
 
 		if (primaryWallet && isEthereumWallet(primaryWallet) && network) {
@@ -69,7 +79,31 @@ export default function CreateBounty() {
 				toast.dismiss()
 				toast.error('Error redeeming token')
 				console.error(error)
+				return
 			}
+		}
+
+		const dataToSend = {
+			...formData,
+			chain_id: chain_id,
+			creator_address: creator_address,
+		}
+
+		try {
+			const response = await fetch('/api/create-bounty', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(dataToSend),
+			})
+
+			if (response.ok) {
+				toast.success('Bounty created successfully!')
+			} else {
+				toast.error('Failed to create bounty')
+			}
+		} catch (error) {
+			console.error(error)
+			toast.error('An error occurred')
 		}
 	}
 

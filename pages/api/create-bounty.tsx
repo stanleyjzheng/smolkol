@@ -45,7 +45,7 @@ export default async function handler(
 			const bountyData = {
 				creator_address,
 				creator_ens,
-				amount: BigInt(amount),
+				amount: BigInt(parseFloat(amount) * 10 ** 18),
 				chainid: parseInt(chain_id),
 				paid: true,
 				completed: false,
