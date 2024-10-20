@@ -1,0 +1,27 @@
+[workspace.package]
+rust-version = "1.75.0"
+
+[workspace]
+members = ["components/transaction_listener"]
+
+[workspace.dependencies]
+anyhow = "1.0.75"
+dotenv = "0.15.0"
+ethers = { git = "https://github.com/gakonst/ethers-rs.git", rev = "88095ba", features = [
+    "ws",
+] }
+log = "0.4"
+once_cell = "1.19.0"
+pretty_env_logger = "0.5"
+sqlx = { version = "0.7", features = [
+    "runtime-tokio-native-tls",
+    "postgres",
+    "macros",
+    "json",
+    "bigdecimal",
+] }
+tokio = { version = "1", features = ["full"] }
+
+[profile.dev]
+split-debuginfo = "unpacked"
+debug = "limited"

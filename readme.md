@@ -11,8 +11,9 @@ create tables:
 CREATE TABLE bounties (
     creator_address VARCHAR(42) NOT NULL,  -- Ethereum addresses are 42 characters long including '0x'
     creator_ens VARCHAR(255),              -- ENS names can vary in length, 255 is a safe upper limit
-    amount NUMERIC(38, 18) NOT NULL,       -- ETH amounts, 18 decimal places to represent full precision
+    amount NUMERIC NOT NULL,               -- ETH amounts in DEC
     chainid INTEGER NOT NULL,              -- Chain ID for the blockchain (Ethereum, etc.)
+    paid BOOLEAN NOT NULL DEFAULT FALSE,   -- True if the bounty has been paid for by the creator, default to false
     completed BOOLEAN NOT NULL DEFAULT FALSE, -- True if the condition has been met, default to false
     search_string TEXT,                    -- Can vary in length, hence use TEXT
     condition JSONB,                       -- Use JSONB to store the type and the required number, e.g. {"type": "likes", "count": 1000}

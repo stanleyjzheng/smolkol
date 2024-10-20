@@ -16,6 +16,7 @@ type Bounty = {
 	amount: string // ETH amount, stored as string due to large precision
 	chainid: number
 	completed: boolean
+	paid: boolean
 	search_string: string
 	condition: {
 		type: string
