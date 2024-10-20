@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
-
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableRow, TableCell } from '@/components/ui/table'
@@ -45,6 +45,8 @@ export default function BountyPage() {
 	const [submitting, setSubmitting] = useState(false)
 	const [submissionResult, setSubmissionResult] = useState<string | null>(null)
 
+	const { primaryWallet } = useDynamicContext()
+
 	useEffect(() => {
 		if (slug) {
 			fetch(`/api/bounty/${slug}`)
@@ -70,7 +72,7 @@ export default function BountyPage() {
 		const res = await fetch(`/api/bounty/${slug}/claim`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ tweetLink }),
+			body: JSON.stringify({ tweetLink, to_address: primaryWallet?.address }),
 		})
 
 		const data = await res.json()

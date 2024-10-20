@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core'
 import { Pool } from 'pg'
 import { getToken } from 'next-auth/jwt'
 import { extractTweetId, fetchTweetData } from '../../../../lib/utils'
@@ -12,11 +13,18 @@ const pool = new Pool({
 	port: Number(process.env.PG_PORT),
 })
 
-function sleep(ms: number) {
-	return new Promise((resolve) => setTimeout(resolve, ms))
+// Ensure environment variables are loaded
+const privateKey = process.env.PRIVATE_KEY
+const rpcUrl = process.env.RPC_URL
+const chainId = process.env.CHAIN_ID
+
+if (!privateKey || !rpcUrl || !chainId) {
+	throw new Error(
+		'Please define PRIVATE_KEY, RPC_URL, and CHAIN_ID in your .env file',
+	)
 }
 
-export default async function handler(
+export default async function Handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
@@ -34,7 +42,7 @@ export default async function handler(
 		return
 	}
 
-	const { tweetLink } = req.body
+	const { tweetLink, to_address } = req.body
 
 	if (!tweetLink) {
 		res.status(400).json({ error: 'Missing tweet link' })
@@ -80,10 +88,6 @@ export default async function handler(
 		const tweetText = tweetData?.text
 		const likes = tweetData?.likeCount
 
-		// Simulate OpenAI call to analyze tweet content
-		await sleep(2000)
-
-		// Dummy sentiment analysis (positive if likes > threshold)
 		const requiredLikes = bounty.condition.count
 		const meetsCondition = likes >= requiredLikes
 
@@ -100,11 +104,20 @@ export default async function handler(
 			return
 		}
 
-		// Simulate ETH transaction
-		await sleep(2000)
+		const response = await fetch('/api/sendEth', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				to: to_address,
+				valueInEth: bounty.condition.amount,
+			}),
+		})
 
-		// const txLink = 'https://etherscan.io/tx/0x1234567890abcdef'
-		const txLink = tweetText
+		const data = await response.json()
+
+		const txLink = data.txHash
 
 		// Mark the bounty as completed
 		const updateClient = await pool.connect()
