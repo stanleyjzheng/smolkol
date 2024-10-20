@@ -63,6 +63,7 @@ export default function CreateBounty() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
+		const loadingToastId = toast.loading('Creating bounty...')
 		console.log('Submitting bounty:', formData)
 
 		if (primaryWallet && isEthereumWallet(primaryWallet) && network) {
@@ -95,7 +96,7 @@ export default function CreateBounty() {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(dataToSend),
 			})
-
+			toast.dismiss(loadingToastId)
 			if (response.ok) {
 				toast.success('Bounty created successfully!')
 			} else {

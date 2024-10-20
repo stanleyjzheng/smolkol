@@ -12,6 +12,7 @@ import { Alert } from '@/components/ui/alert'
 import Page from '@/components/page'
 
 import { formatCondition } from '../../lib/utils'
+import { toast } from 'sonner'
 
 interface LoaderProps {
 	className?: string
@@ -65,6 +66,7 @@ export default function BountyPage() {
 			alert('Please log in with Twitter to claim this bounty.')
 			return
 		}
+		const loadingToastId = toast.loading('Claiming bounty...')
 
 		setSubmitting(true)
 		setSubmissionResult(null)
@@ -76,11 +78,14 @@ export default function BountyPage() {
 		})
 
 		const data = await res.json()
+		toast.dismiss(loadingToastId)
 
 		if (data.success) {
 			setSubmissionResult(`Success! Transaction link: ${data.txLink}`)
+			toast.success('Bounty claimed successfully!')
 		} else {
 			setSubmissionResult(`Submission rejected: ${data.reason}`)
+			toast.error(`Submission rejected: ${data.reason}`)
 		}
 
 		setSubmitting(false)
