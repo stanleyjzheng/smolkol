@@ -9,9 +9,18 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Alert } from '@/components/ui/alert'
+import Page from '@/components/page'
 
-const Loader = () => (
-	<div className='animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900'></div>
+import { formatCondition } from '../../lib/utils'
+
+interface LoaderProps {
+	className?: string
+}
+
+const Loader = ({ className }: LoaderProps) => (
+	<div
+		className={`w-12 h-12 border-4 border-dashed rounded-full border-blue-500 ${className}`}
+	></div>
 )
 
 interface Bounty {
@@ -92,109 +101,111 @@ export default function BountyPage() {
 	}
 
 	return (
-		<Card className='p-6 max-w-2xl mx-auto my-8'>
-			<CardHeader>
-				<CardTitle>Bounty Details</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<Table>
-					<TableBody>
-						<TableRow>
-							<TableCell>Creator Address:</TableCell>
-							<TableCell>{bounty.creator_address}</TableCell>
-						</TableRow>
-						{bounty.creator_ens && (
+		<Page>
+			<Card className='p-6 max-w-2xl mx-auto my-8'>
+				<CardHeader>
+					<CardTitle>Bounty Details</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<Table>
+						<TableBody>
 							<TableRow>
-								<TableCell>Creator ENS:</TableCell>
-								<TableCell>{bounty.creator_ens}</TableCell>
+								<TableCell>Creator Address:</TableCell>
+								<TableCell>{bounty.creator_address}</TableCell>
 							</TableRow>
-						)}
-						<TableRow>
-							<TableCell>Amount:</TableCell>
-							<TableCell>{parseFloat(bounty.amount) / 10 ** 18}</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Chain ID:</TableCell>
-							<TableCell>{bounty.chainid}</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Completed:</TableCell>
-							<TableCell>{bounty.completed ? 'Yes' : 'No'}</TableCell>
-						</TableRow>
-						{bounty.search_string && (
+							{bounty.creator_ens && (
+								<TableRow>
+									<TableCell>Creator ENS:</TableCell>
+									<TableCell>{bounty.creator_ens}</TableCell>
+								</TableRow>
+							)}
 							<TableRow>
-								<TableCell>Search String:</TableCell>
-								<TableCell>{bounty.search_string}</TableCell>
+								<TableCell>Amount:</TableCell>
+								<TableCell>{parseFloat(bounty.amount) / 10 ** 18}</TableCell>
 							</TableRow>
-						)}
-						<TableRow>
-							<TableCell>Condition:</TableCell>
-							<TableCell>{JSON.stringify(bounty.condition)}</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Slug:</TableCell>
-							<TableCell>{bounty.slug}</TableCell>
-						</TableRow>
-					</TableBody>
-				</Table>
+							<TableRow>
+								<TableCell>Chain ID:</TableCell>
+								<TableCell>{bounty.chainid}</TableCell>
+							</TableRow>
+							<TableRow>
+								<TableCell>Completed:</TableCell>
+								<TableCell>{bounty.completed ? 'Yes' : 'No'}</TableCell>
+							</TableRow>
+							{bounty.search_string && (
+								<TableRow>
+									<TableCell>Search String:</TableCell>
+									<TableCell>{bounty.search_string}</TableCell>
+								</TableRow>
+							)}
+							<TableRow>
+								<TableCell>Condition:</TableCell>
+								<TableCell>{formatCondition(bounty.condition)}</TableCell>
+							</TableRow>
+						</TableBody>
+					</Table>
 
-				{status === 'unauthenticated' ? (
-					<Button onClick={() => signIn('twitter')} className='mt-4'>
-						Log in with Twitter
-					</Button>
-				) : (
-					<>
-						<div className='flex items-center mt-4 mb-4'>
-							<Avatar className='mr-4'>
-								<AvatarImage
-									src={session?.user?.image}
-									alt={session?.user?.name}
-								/>
-								<AvatarFallback>
-									{session?.user?.name?.charAt(0)}
-								</AvatarFallback>
-							</Avatar>
-							<div>
-								<p className='text-sm'>Logged in as {session?.user?.name}</p>
-								<Button variant='secondary' size='sm' onClick={() => signOut()}>
-									Log out
-								</Button>
-							</div>
-						</div>
-
-						<div className='mb-4'>
-							<Label htmlFor='tweetLink' className='mb-2'>
-								Paste your tweet link here:
-							</Label>
-							<Input
-								type='text'
-								name='tweetLink'
-								id='tweetLink'
-								value={tweetLink}
-								onChange={(e) => setTweetLink(e.target.value)}
-								placeholder='https://twitter.com/yourtweet'
-							/>
-						</div>
-
-						<Button onClick={handleClaim} disabled={submitting}>
-							{submitting ? 'Submitting...' : 'Claim'}
+					{status === 'unauthenticated' ? (
+						<Button onClick={() => signIn('twitter')} className='mt-4'>
+							Log in with Twitter
 						</Button>
+					) : (
+						<>
+							<div className='flex items-center mt-4 mb-4'>
+								<Avatar className='mr-4'>
+									<AvatarImage
+										src={session?.user?.image}
+										alt={session?.user?.name}
+									/>
+									<AvatarFallback>
+										{session?.user?.name?.charAt(0)}
+									</AvatarFallback>
+								</Avatar>
+								<div>
+									<p className='text-sm'>Logged in as {session?.user?.name}</p>
+									<Button
+										variant='secondary'
+										size='sm'
+										onClick={() => signOut()}
+									>
+										Log out
+									</Button>
+								</div>
+							</div>
 
-						{submissionResult && (
-							<Alert
-								variant={
-									submissionResult.startsWith('Success')
-										? 'default'
-										: 'destructive'
-								}
-								className='mt-4'
-							>
-								{submissionResult}
-							</Alert>
-						)}
-					</>
-				)}
-			</CardContent>
-		</Card>
+							<div className='mb-4'>
+								<Label htmlFor='tweetLink' className='mb-2'>
+									Paste your tweet link here:
+								</Label>
+								<Input
+									type='text'
+									name='tweetLink'
+									id='tweetLink'
+									value={tweetLink}
+									onChange={(e) => setTweetLink(e.target.value)}
+									placeholder='https://twitter.com/yourtweet'
+								/>
+							</div>
+
+							<Button onClick={handleClaim} disabled={submitting}>
+								{submitting ? 'Submitting...' : 'Claim'}
+							</Button>
+
+							{submissionResult && (
+								<Alert
+									variant={
+										submissionResult.startsWith('Success')
+											? 'default'
+											: 'destructive'
+									}
+									className='mt-4'
+								>
+									{submissionResult}
+								</Alert>
+							)}
+						</>
+					)}
+				</CardContent>
+			</Card>
+		</Page>
 	)
 }

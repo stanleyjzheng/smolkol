@@ -109,3 +109,14 @@ export async function fetchTweetData(req: NextApiRequest, tweetId: string) {
 
 	return response
 }
+
+export const formatCondition = (condition: { type: string; count: number }) => {
+	switch (condition.type) {
+		case 'likes':
+			return `${condition.count} ${condition.count === 1 ? 'Like' : 'Likes'}`
+		case 'views':
+			return `${condition.count} ${condition.count === 1 ? 'View' : 'Views'}`
+		default:
+			return JSON.stringify(condition)
+	}
+}

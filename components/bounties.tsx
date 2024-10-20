@@ -8,6 +8,7 @@ import {
 	CardTitle,
 } from '@/components/ui/card'
 import Link from 'next/link'
+import { formatCondition } from '../lib/utils'
 
 // Type for the Bounty object
 type Bounty = {
@@ -84,7 +85,8 @@ export default function BountyPage() {
 							{isCompleted ? 'Status: Unfillable (Completed)' : 'Status: Open'}
 						</p>
 						<p className='text-muted-foreground'>
-							Condition: {bounty.condition.count} {bounty.condition.type}
+							Condition:
+							{formatCondition(bounty.condition)}
 						</p>
 					</CardContent>
 					<CardFooter className='flex justify-between items-center'>
