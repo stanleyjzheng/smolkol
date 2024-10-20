@@ -138,7 +138,7 @@ export default function BountyPage() {
 								</TableRow>
 							)}
 							<TableRow>
-								<TableCell>Condition:</TableCell>
+								<TableCell>Condition: </TableCell>
 								<TableCell>{formatCondition(bounty.condition)}</TableCell>
 							</TableRow>
 						</TableBody>
@@ -183,6 +183,7 @@ export default function BountyPage() {
 									value={tweetLink}
 									onChange={(e) => setTweetLink(e.target.value)}
 									placeholder='https://twitter.com/yourtweet'
+									style={{ color: 'black' }}
 								/>
 							</div>
 

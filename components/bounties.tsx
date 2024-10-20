@@ -26,7 +26,7 @@ type Bounty = {
 	slug: string
 }
 
-const ETH_TO_USD = 2501.25
+const ETH_TO_USD = 2510.25
 
 export default function BountyPage() {
 	const [bounties, setBounties] = useState<Bounty[]>([])
@@ -72,7 +72,20 @@ export default function BountyPage() {
 			{bountyList.map((bounty) => (
 				<Card key={bounty.slug} className='flex flex-col'>
 					<CardHeader>
-						<CardTitle>{bounty.search_string}</CardTitle>
+						<CardTitle>
+							{isCompleted ? (
+								<Link
+									href='https://x.com/florencecel/status/1847716977520918634'
+									passHref
+								>
+									<span className='text-blue-600 underline'>
+										{bounty.search_string}
+									</span>
+								</Link>
+							) : (
+								bounty.search_string
+							)}
+						</CardTitle>
 					</CardHeader>
 					<CardContent className='flex-grow'>
 						<p className='text-muted-foreground'>{getCreatorDisplay(bounty)}</p>
@@ -85,14 +98,13 @@ export default function BountyPage() {
 							{isCompleted ? 'Status: Unfillable (Completed)' : 'Status: Open'}
 						</p>
 						<p className='text-muted-foreground'>
-							Condition:
-							{formatCondition(bounty.condition)}
+							Condition: {formatCondition(bounty.condition)}
 						</p>
 					</CardContent>
 					<CardFooter className='flex justify-between items-center'>
 						<Link href={`/bounty/${bounty.slug}`} passHref>
 							<Button variant='outline'>Claim</Button>
-						</Link>{' '}
+						</Link>
 					</CardFooter>
 				</Card>
 			))}
