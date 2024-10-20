@@ -77,8 +77,8 @@ export default async function handler(
 		const tweetData = await fetchTweetData(req, tweetId)
 
 		// Check if the tweet meets the bounty conditions
-		const tweetText = tweetData.text
-		const likes = tweetData.likeCount
+		const tweetText = tweetData?.text
+		const likes = tweetData?.likeCount
 
 		// Simulate OpenAI call to analyze tweet content
 		await sleep(2000)

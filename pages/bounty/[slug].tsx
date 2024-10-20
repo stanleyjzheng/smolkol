@@ -115,7 +115,7 @@ export default function BountyPage() {
 			) : (
 				<>
 					<div className='mb-4'>
-						<p className='mb-2'>Logged in as {session.user?.name}</p>
+						<p className='mb-2'>Logged in as {session?.user?.name}</p>
 						<button
 							onClick={() => signOut()}
 							className='px-4 py-2 bg-gray-500 text-white rounded-md mb-4'
