@@ -155,8 +155,8 @@ export default function BountyPage() {
 							<div className='flex items-center mt-4 mb-4'>
 								<Avatar className='mr-4'>
 									<AvatarImage
-										src={session?.user?.image}
-										alt={session?.user?.name}
+										src={session?.user?.image!}
+										alt={session?.user?.name!}
 									/>
 									<AvatarFallback>
 										{session?.user?.name?.charAt(0)}
@@ -185,7 +185,7 @@ export default function BountyPage() {
 									value={tweetLink}
 									onChange={(e) => setTweetLink(e.target.value)}
 									placeholder='https://twitter.com/yourtweet'
-									style={{ color: 'black' }}
+									className='text-black'
 								/>
 							</div>
 

@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core'
 import { Pool } from 'pg'
 import { getToken } from 'next-auth/jwt'
 import { extractTweetId, fetchTweetData } from '../../../../lib/utils'
 import { judgeBounty } from '../../../../lib/openai'
+import { Wallet, parseEther, JsonRpcProvider } from 'ethers'
 
 const pool = new Pool({
 	user: process.env.PG_USER,
@@ -13,7 +13,6 @@ const pool = new Pool({
 	port: Number(process.env.PG_PORT),
 })
 
-// Ensure environment variables are loaded
 const privateKey = process.env.PRIVATE_KEY
 const rpcUrl = process.env.RPC_URL
 const chainId = process.env.CHAIN_ID
@@ -22,6 +21,36 @@ if (!privateKey || !rpcUrl || !chainId) {
 	throw new Error(
 		'Please define PRIVATE_KEY, RPC_URL, and CHAIN_ID in your .env file',
 	)
+}
+
+// Create a provider using ethers
+const provider = new JsonRpcProvider(rpcUrl)
+
+// Create a wallet instance from the private key and connect it to the provider
+const wallet = new Wallet(privateKey, provider)
+
+const sendEthTransaction = async (
+	to: string,
+	value: string,
+): Promise<string> => {
+	try {
+		// Create the transaction object
+		const tx = {
+			to,
+			value,
+		}
+
+		// Sign and send the transaction
+		const transactionResponse = await wallet.sendTransaction(tx)
+
+		console.log('Transaction sent:', transactionResponse.hash)
+
+		// Return the transaction hash
+		return transactionResponse.hash
+	} catch (error) {
+		console.error('Error sending transaction:', error)
+		throw error
+	}
 }
 
 export default async function Handler(
@@ -89,7 +118,7 @@ export default async function Handler(
 		const likes = tweetData?.likeCount
 
 		const requiredLikes = bounty.condition.count
-		const meetsCondition = likes >= requiredLikes
+		const meetsCondition = (likes as any) >= requiredLikes
 
 		if (!meetsCondition) {
 			const reason = `Your tweet does not meet the bounty requirements. It has ${likes} likes but requires at least ${requiredLikes} likes.`
@@ -97,27 +126,14 @@ export default async function Handler(
 			return
 		}
 
-		let judged = await judgeBounty(bounty.search_string, tweetText)
+		let judged = await judgeBounty(bounty.search_string, tweetText!)
 
 		if (!judged?.matched_request) {
 			res.status(200).json({ success: false, reason: judged?.reason })
 			return
 		}
 
-		const response = await fetch('/api/sendEth', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				to: to_address,
-				valueInEth: bounty.condition.amount,
-			}),
-		})
-
-		const data = await response.json()
-
-		const txLink = data.txHash
+		const txLink = await sendEthTransaction(to_address, bounty.amount)
 
 		// Mark the bounty as completed
 		const updateClient = await pool.connect()
