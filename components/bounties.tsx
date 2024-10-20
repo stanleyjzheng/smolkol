@@ -25,8 +25,7 @@ type Bounty = {
 	slug: string
 }
 
-// Hardcoded ETH to USD conversion rate
-const ETH_TO_USD = 1800 // Example: 1 ETH = 1800 USD
+const ETH_TO_USD = 2501.25
 
 export default function BountyPage() {
 	const [bounties, setBounties] = useState<Bounty[]>([])
@@ -62,7 +61,7 @@ export default function BountyPage() {
 
 	// Helper function to convert ETH to USD
 	const convertEthToUsd = (amountInEth: string) => {
-		const amount = parseFloat(amountInEth)
+		const amount = parseFloat(amountInEth) / 10 ** 18
 		return (amount * ETH_TO_USD).toFixed(2) // Convert ETH to USD and format to 2 decimal places
 	}
 
@@ -77,8 +76,8 @@ export default function BountyPage() {
 					<CardContent className='flex-grow'>
 						<p className='text-muted-foreground'>{getCreatorDisplay(bounty)}</p>
 						<p className='text-muted-foreground'>
-							Amount: {bounty.amount} ETH (~${convertEthToUsd(bounty.amount)}{' '}
-							USD)
+							Amount: {parseFloat(bounty.amount) / 10 ** 18} ETH (~$
+							{convertEthToUsd(bounty.amount)} USD)
 						</p>
 						<p className='text-muted-foreground'>Chain ID: {bounty.chainid}</p>
 						<p className='text-muted-foreground'>

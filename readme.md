@@ -26,9 +26,9 @@ dummy data:
 ```sql
 INSERT INTO bounties (creator_address, creator_ens, amount, chainid, completed, search_string, condition, slug)
 VALUES
-('0x1234567890abcdef1234567890abcdef12345678', 'creator1.eth', 10.5, 1, FALSE, 'Search query for creator 1', '{"type": "likes", "count": 1000}', 'l'),
-('0xabcdefabcdefabcdefabcdefabcdefabcdefabcd', NULL, 5.25, 1, TRUE, 'Search query for creator 2', '{"type": "views", "count": 5000}', 'v'),
-('0xabcdefabcdefabcdefabcdefabcdefabcdefabcd', 'creator2.eth', 2.00, 137, FALSE, 'Search query for creator 2 on Polygon', '{"type": "likes", "count": 200}', 'r'),
-('0x1234567890abcdef1234567890abcdef12345678', NULL, 7.75, 1, TRUE, 'Search query for creator 1 again', '{"type": "views", "count": 12000}', 'a'),
-('0x234567890abcdef1234567890abcdef123456789', 'creator3.eth', 12.0, 137, FALSE, 'Search query for creator 3', '{"type": "likes", "count": 750}', 'm');
+('0x1234567890abcdef1234567890abcdef12345678', 'creator1.eth', 1000000000000000, 1, FALSE, 'A tweet proving or debunking CZ accusations of Uniswap getting hacked', '{"type": "likes", "count": 1000}', 'l'),
+('0xabcdefabcdefabcdefabcdefabcdefabcdefabcd', NULL, 10000000000000, 1, TRUE, 'Information leading to the arrest of CL207', '{"type": "views", "count": 5000}', 'v'),
+('0xabcdefabcdefabcdefabcdefabcdefabcdefabcd', 'creator2.eth', 20000000000000000, 137, FALSE, 'Novel ETH censorship resistance/MCP research', '{"type": "likes", "count": 200}', 'r'),
+('0x1234567890abcdef1234567890abcdef12345678', NULL, 10000000000000000, 1, TRUE, 'A shitpost about Flow', '{"type": "views", "count": 12000}', 'a'),
+('0x234567890abcdef1234567890abcdef123456789', 'creator3.eth', 10000000000, 137, FALSE, 'A positive tweet about Uniswap hooks', '{"type": "likes", "count": 750}', 'm');
 ```

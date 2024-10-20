@@ -84,7 +84,7 @@ export default function BountyPage() {
 					</p>
 				)}
 				<p>
-					<strong>Amount:</strong> {bounty.amount}
+					<strong>Amount:</strong> {parseFloat(bounty.amount) / 10 ** 18}
 				</p>
 				<p>
 					<strong>Chain ID:</strong> {bounty.chainid}
